@@ -1,6 +1,6 @@
 # Homework for SQL Day 2
 
-![]('https://github.com/Acronine/coding_temple_data_analytics/blob/main/week_5/day_2/Movie%20Theatre%20ERD-3.pdf')
+[]('https://github.com/Acronine/coding_temple_data_analytics/blob/main/week_5/day_2/Movie%20Theatre%20ERD-3.pdf')
 
 ## Folder Structure
 
