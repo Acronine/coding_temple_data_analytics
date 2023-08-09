@@ -1,6 +1,7 @@
 # Homework for SQL Day 2
 
 ![]('C:\Users\Owner\Documents\Coding Temple\week_5\day_2\Movie Theatre ERD-3.pdf')
+![]('(https://github.com/Acronine/coding_temple_data_analytics/blob/main/week_5/day_2/Movie%20Theatre%20ERD-3.pdf)')
 
 ## Folder Structure
 
