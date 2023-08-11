@@ -1,6 +1,6 @@
 # Homework for SQL Day 3
 
-![]('https://github.com/Acronine/coding_temple_data_analytics/blob/main/week_5/day_3/Database%20ER%20diagram%20(crow's%20foot).png')
+![](https://github.com/Acronine/coding_temple_data_analytics/blob/main/week_5/day_3/Database%20ER%20diagram%20(crow's%20foot).png)
 
 ## Folder Structure
 
