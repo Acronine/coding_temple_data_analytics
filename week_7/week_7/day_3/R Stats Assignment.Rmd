@@ -1,0 +1,101 @@
+---
+title: "Stats in R Assignment"
+author: "Alex Lucchesi"
+date: "2023/05/30"
+output: html_document
+---
+
+## Assignment
+
+For today's assignment, you will be given a blank notebook and a link to the [Call of Duty Dataset](https://www.kaggle.com/datasets/beridzeg45/call-of-duty-reviews) You will need to fill out the notebook and create your own code chunks to run code. Remember that we use this code without any quotation marks to create a code chunk: '`{r} '` \### Your Goal:
+
+To receive credit for today's assignment, you will need to:
+
+-   Import the dataset
+-   Load the dataset into a tibble
+-   Mutate a new column
+-   Create a hypothesis regarding your data and communicate that hypothesis in a scientific method.
+-   Create a notebook that has markdown cells, explaining your code and process/thoughts. **Your markdown should be well thought out and reflect a thorough analysis.**
+-   Clean the data
+-   Explore the data (include visualizations)
+-   Create a statistical test and communicate the results\
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+df <- read.csv("C:/Users/Owner/Documents/Coding Temple/week_7/day_3/Call_of_Duty_Reviews.csv")
+df
+```
+
+I want to drop the two review columns because they are irellevant to what I want to see. I also want to drop the Publisher column because it only has one unique variable. Next I will convert the dataframe to a tibble and then clean up the column names. I also noticed in the column game_title, any game that has the colon is missing its platform & release year info.
+
+```{r}
+df <- df[-c((6:7),4)]
+my_fun <- function(x){
+  names(x) <-  names(x) %>% str_replace_all('\\.','_') %>%
+    tolower()
+  return(x)
+}
+df <- my_fun(df)
+df$game_title <- df$game_title %>% str_replace_all(":", "")
+tb <- as_tibble(df)
+tb
+```
+
+any
+
+```{r}
+tb_nac <- tb %>% summarize(na_count=sum(is.na(tb)))
+tb_nac
+tb_col_na <- colSums(is.na(tb))
+tb_col_na
+```
+
+Its saying only 22 null values are present but I can see from just looking at the data that there are blank values in the platform and release year columns. I'm going to be dropping the metacritic nas and filling the crictic compound scores with 0s.
+
+```{r}
+tb$critic_compound_score <- tb$critic_compound_score %>% replace_na(0)
+tb <- na.omit(tb)
+tb
+```
+
+After cleaning up, I will be mutating a new column called average compound score that will take the critic plus user compound score and divide them by 2 to get the average.
+
+```{r}
+tb <-  tb %>% mutate(avg_compound_score = (critic_compound_score + user_compound_score) /2)
+tb
+```
+
+My hypothesis is that there is a correlation between critic compound score and user compound score. With graphing, I will be choosing the critic score as the predictor and the user as the output. My reasoning for this is that when reviewing, critics will usually get a copy to review first. This might lead to some possible influence on the users review if they were to feel they were misled. Or, if the user felt satisfied with the game and felt that they should also input their own review.
+
+```{r}
+ggplot(data=tb, mapping=aes(x=critic_compound_score, y=user_compound_score)) +
+  geom_point()
+```
+
+First, I want to pull the correlation coefficient between the two columns and then apply a linear regression model. I will be using univariate analysis due to only using two columns.
+
+```{r}
+cor(tb$critic_compound_score, tb$user_compound_score)
+lm(tb$user_compound_score~tb$critic_compound_score)
+
+```
+
+Lets plug this back into the graph to see what the line looks like!
+
+```{r}
+ggplot(data=tb, mapping=aes(x=critic_compound_score, y=user_compound_score)) +
+  geom_point() +
+  geom_abline(mapping=aes(intercept=.27431,slope=.07566))
+```
+
+Now looking at the graph and seeing the coefficient slope being so close to zero, I could easily induce that there is no meaningful relationship between the two. However, I want to go even further before I disprove my hypothesis and prove the null hypothesis. I will be looking at the p-value to see how close to 0 it is.
+
+```{r}
+summary(lm(tb$user_compound_score~tb$critic_compound_score))
+
+```
+
+Seeing the p-value being so high at .5201, I reject my hypothesis and accept the null hypothesis. The null hypothsis that there is no correlation between the critic_compound_score and user_compound_score.
